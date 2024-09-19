@@ -4,7 +4,7 @@ package com.xxl.job.core.glue;
  * Created by xuxueli on 17/4/26.
  */
 public enum GlueTypeEnum {
-
+    DUBBO("DUBBO", false, null, null),
     BEAN("BEAN", false, null, null),
     GLUE_GROOVY("GLUE(Java)", false, null, null),
     GLUE_SHELL("GLUE(Shell)", true, "bash", ".sh"),

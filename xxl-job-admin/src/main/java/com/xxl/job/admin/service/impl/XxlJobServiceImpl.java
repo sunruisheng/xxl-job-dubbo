@@ -1,5 +1,7 @@
 package com.xxl.job.admin.service.impl;
 
+import com.alibaba.nacos.common.utils.StringUtils;
+import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.cron.CronExpression;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
@@ -109,6 +111,26 @@ public class XxlJobServiceImpl implements XxlJobService {
 		if (GlueTypeEnum.GLUE_SHELL==GlueTypeEnum.match(jobInfo.getGlueType()) && jobInfo.getGlueSource()!=null) {
 			jobInfo.setGlueSource(jobInfo.getGlueSource().replaceAll("\r", ""));
 		}
+		if (GlueTypeEnum.DUBBO==GlueTypeEnum.match(jobInfo.getGlueType()) ){
+			if(StringUtils.isBlank(jobInfo.getExecutorHandler())){
+				return new ReturnT<>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+"JobHandler(dubbo接口全类名)") );
+			}
+			if(StringUtils.isBlank(jobInfo.getDubboMethod())){
+				return new ReturnT<>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+"dubbo方法名称") );
+			}
+			if(StringUtils.isBlank(jobInfo.getDubboGroup())){
+				return new ReturnT<>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+"dubbo接口分组") );
+			}
+			if(StringUtils.isBlank(jobInfo.getDubboVersion())){
+				return new ReturnT<>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+"dubbo接口版本号") );
+			}
+			if(StringUtils.isBlank(XxlJobAdminConfig.getAdminConfig().getNacosAddress())){
+				return new ReturnT<>(ReturnT.FAIL_CODE,"dubbu job need to config nacos address in application.properties");
+			}
+			if(StringUtils.isBlank(XxlJobAdminConfig.getAdminConfig().getNacosGroup())){
+				return new ReturnT<>(ReturnT.FAIL_CODE,"dubbu job need to config nacos group in application.properties");
+			}
+		}
 
 		// valid advanced
 		if (ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null) == null) {
@@ -202,6 +224,27 @@ public class XxlJobServiceImpl implements XxlJobService {
 			}
 		}
 
+		if (GlueTypeEnum.DUBBO==GlueTypeEnum.match(jobInfo.getGlueType()) ){
+			if(StringUtils.isBlank(jobInfo.getExecutorHandler())){
+				return new ReturnT<>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+"JobHandler(dubbo接口全类名)") );
+			}
+			if(StringUtils.isBlank(jobInfo.getDubboMethod())){
+				return new ReturnT<>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+"dubbo方法名称") );
+			}
+			if(StringUtils.isBlank(jobInfo.getDubboGroup())){
+				return new ReturnT<>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+"dubbo接口分组") );
+			}
+			if(StringUtils.isBlank(jobInfo.getDubboVersion())){
+				return new ReturnT<>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+"dubbo接口版本号") );
+			}
+			if(StringUtils.isBlank(XxlJobAdminConfig.getAdminConfig().getNacosAddress())){
+				return new ReturnT<>(ReturnT.FAIL_CODE,"dubbu job need to config nacos address in application.properties");
+			}
+			if(StringUtils.isBlank(XxlJobAdminConfig.getAdminConfig().getNacosGroup())){
+				return new ReturnT<>(ReturnT.FAIL_CODE,"dubbu job need to config nacos group in application.properties");
+			}
+		}
+
 		// valid advanced
 		if (ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null) == null) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_executorRouteStrategy")+I18nUtil.getString("system_unvalid")) );
@@ -276,6 +319,9 @@ public class XxlJobServiceImpl implements XxlJobService {
 		exists_jobInfo.setMisfireStrategy(jobInfo.getMisfireStrategy());
 		exists_jobInfo.setExecutorRouteStrategy(jobInfo.getExecutorRouteStrategy());
 		exists_jobInfo.setExecutorHandler(jobInfo.getExecutorHandler());
+		exists_jobInfo.setDubboMethod(jobInfo.getDubboMethod());
+		exists_jobInfo.setDubboVersion(jobInfo.getDubboVersion());
+		exists_jobInfo.setDubboGroup(jobInfo.getDubboGroup());
 		exists_jobInfo.setExecutorParam(jobInfo.getExecutorParam());
 		exists_jobInfo.setExecutorBlockStrategy(jobInfo.getExecutorBlockStrategy());
 		exists_jobInfo.setExecutorTimeout(jobInfo.getExecutorTimeout());

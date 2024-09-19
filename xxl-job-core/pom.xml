@@ -59,6 +59,13 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- Dubbo -->
+		<dependency>
+			<groupId>org.apache.dubbo</groupId>
+			<artifactId>dubbo</artifactId>
+			<version>3.2.15</version>
+		</dependency>
+
 	</dependencies>
 
 </project>

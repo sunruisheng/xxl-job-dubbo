@@ -1,6 +1,7 @@
 package com.xxl.job.admin.controller;
 
 import com.xxl.job.admin.core.complete.XxlJobCompleter;
+import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.exception.XxlJobException;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
@@ -144,9 +145,14 @@ public class JobLogController {
 			if (jobLog == null) {
 				return new ReturnT<LogResult>(ReturnT.FAIL_CODE, I18nUtil.getString("joblog_logid_unvalid"));
 			}
-
+			String executorAddress = jobLog.getExecutorAddress();
 			// log cat
-			ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(jobLog.getExecutorAddress());
+			ExecutorBiz executorBiz;
+			if(executorAddress.equals(XxlJobAdminConfig.getAdminConfig().getNacosAddress())){
+				executorBiz = XxlJobScheduler.getDubboEecutorBiz(executorAddress,XxlJobAdminConfig.getAdminConfig().getNacosGroup());
+			}else{
+				executorBiz = XxlJobScheduler.getExecutorBiz(executorAddress);
+			}
 			ReturnT<LogResult> logResult = executorBiz.log(new LogParam(jobLog.getTriggerTime().getTime(), logId, fromLineNum));
 
 			// is end
@@ -186,7 +192,13 @@ public class JobLogController {
 		// request of kill
 		ReturnT<String> runResult = null;
 		try {
-			ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(log.getExecutorAddress());
+			String executorAddress = log.getExecutorAddress();
+			ExecutorBiz executorBiz;
+			if(executorAddress.equals(XxlJobAdminConfig.getAdminConfig().getNacosAddress())){
+				executorBiz = XxlJobScheduler.getDubboEecutorBiz(executorAddress,XxlJobAdminConfig.getAdminConfig().getNacosGroup());
+			}else{
+				executorBiz = XxlJobScheduler.getExecutorBiz(executorAddress);
+			}
 			runResult = executorBiz.kill(new KillParam(jobInfo.getId()));
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);

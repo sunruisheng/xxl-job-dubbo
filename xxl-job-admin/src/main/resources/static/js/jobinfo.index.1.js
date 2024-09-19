@@ -129,7 +129,7 @@ $(function() {
 
                                 // code url
                                 var codeBtn = "";
-                                if ('BEAN' != row.glueType) {
+                                if ('BEAN' != row.glueType && 'DUBBO' != row.glueType) {
                                     var codeUrl = base_url +'/jobcode?jobId='+ row.id;
                                     codeBtn = '<li><a href="'+ codeUrl +'" target="_blank" >GLUE IDE</a></li>\n';
                                     codeBtn += '<li class="divider"></li>\n';
@@ -501,12 +501,25 @@ $(function() {
     $(".glueType").change(function(){
 		// executorHandler
         var $executorHandler = $(this).parents("form").find("input[name='executorHandler']");
+        var $dubboDiv = $(this).parents("form").find("div[name='dubboDiv1']");
+        var $dubboDiv2 = $(this).parents("form").find("div[name='dubboDiv2']");
         var glueType = $(this).val();
-        if ('BEAN' != glueType) {
+        if ('BEAN' != glueType && 'DUBBO' != glueType) {
             $executorHandler.val("");
             $executorHandler.attr("readonly","readonly");
+            $dubboDiv.hide();
+            $dubboDiv2.hide();
         } else {
             $executorHandler.removeAttr("readonly");
+
+            if('BEAN' == glueType){
+                $dubboDiv.hide();
+                $dubboDiv2.hide();
+            }else{
+                $dubboDiv.show();
+                $dubboDiv2.show();
+            }
+
         }
     });
 
@@ -560,6 +573,9 @@ $(function() {
 		// fill job
 		$('#updateModal .form select[name=glueType] option[value='+ row.glueType +']').prop('selected', true);
 		$("#updateModal .form input[name='executorHandler']").val( row.executorHandler );
+		$("#updateModal .form input[name='dubboMethod']").val( row.dubboMethod );
+		$("#updateModal .form input[name='dubboGroup']").val( row.dubboGroup );
+        $('#updateModal .form input[name=dubboVersion]').val(row.dubboVersion);
 		$("#updateModal .form textarea[name='executorParam']").val( row.executorParam );
 
 		// 》init glueType

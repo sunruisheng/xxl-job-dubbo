@@ -66,6 +66,10 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
 
     @Value("${xxl.job.logretentiondays}")
     private int logretentiondays;
+    @Value("${dubbo.registry.address}")
+    private String nacosAddress;
+    @Value("${dubbo.registry.group}")
+    private String nacosGroup;
 
     // dao, service
 
@@ -155,4 +159,19 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
         return jobAlarmer;
     }
 
+    public String getNacosAddress() {
+        return nacosAddress;
+    }
+
+    public void setNacosAddress(String nacosAddress) {
+        this.nacosAddress = nacosAddress;
+    }
+
+    public String getNacosGroup() {
+        return nacosGroup;
+    }
+
+    public void setNacosGroup(String nacosGroup) {
+        this.nacosGroup = nacosGroup;
+    }
 }

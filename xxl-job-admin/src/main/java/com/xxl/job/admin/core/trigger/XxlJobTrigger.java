@@ -11,6 +11,7 @@ import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
+import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.job.core.util.IpUtil;
 import com.xxl.job.core.util.ThrowableUtil;
 import org.slf4j.Logger;
@@ -127,6 +128,9 @@ public class XxlJobTrigger {
         TriggerParam triggerParam = new TriggerParam();
         triggerParam.setJobId(jobInfo.getId());
         triggerParam.setExecutorHandler(jobInfo.getExecutorHandler());
+        triggerParam.setDubboMethod(jobInfo.getDubboMethod());
+        triggerParam.setDubboGroup(jobInfo.getDubboGroup());
+        triggerParam.setDubboVersion(jobInfo.getDubboVersion());
         triggerParam.setExecutorParams(jobInfo.getExecutorParam());
         triggerParam.setExecutorBlockStrategy(jobInfo.getExecutorBlockStrategy());
         triggerParam.setExecutorTimeout(jobInfo.getExecutorTimeout());
@@ -140,28 +144,36 @@ public class XxlJobTrigger {
 
         // 3、init address
         String address = null;
+        String nacosGroup = null;
         ReturnT<String> routeAddressResult = null;
-        if (group.getRegistryList()!=null && !group.getRegistryList().isEmpty()) {
-            if (ExecutorRouteStrategyEnum.SHARDING_BROADCAST == executorRouteStrategyEnum) {
-                if (index < group.getRegistryList().size()) {
-                    address = group.getRegistryList().get(index);
+        GlueTypeEnum glueTypeEnum = GlueTypeEnum.match(triggerParam.getGlueType());
+        //如果使用的是dubbo，则单独获取注册中心地址并额外获取nacos分组
+        if(GlueTypeEnum.DUBBO == glueTypeEnum){
+            address = XxlJobAdminConfig.getAdminConfig().getNacosAddress();
+            nacosGroup = XxlJobAdminConfig.getAdminConfig().getNacosGroup();
+        }else{
+            if (group.getRegistryList()!=null && !group.getRegistryList().isEmpty()) {
+                if (ExecutorRouteStrategyEnum.SHARDING_BROADCAST == executorRouteStrategyEnum) {
+                    if (index < group.getRegistryList().size()) {
+                        address = group.getRegistryList().get(index);
+                    } else {
+                        address = group.getRegistryList().get(0);
+                    }
                 } else {
-                    address = group.getRegistryList().get(0);
+                    routeAddressResult = executorRouteStrategyEnum.getRouter().route(triggerParam, group.getRegistryList());
+                    if (routeAddressResult.getCode() == ReturnT.SUCCESS_CODE) {
+                        address = routeAddressResult.getContent();
+                    }
                 }
             } else {
-                routeAddressResult = executorRouteStrategyEnum.getRouter().route(triggerParam, group.getRegistryList());
-                if (routeAddressResult.getCode() == ReturnT.SUCCESS_CODE) {
-                    address = routeAddressResult.getContent();
-                }
+                routeAddressResult = new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("jobconf_trigger_address_empty"));
             }
-        } else {
-            routeAddressResult = new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("jobconf_trigger_address_empty"));
         }
 
         // 4、trigger remote executor
         ReturnT<String> triggerResult = null;
         if (address != null) {
-            triggerResult = runExecutor(triggerParam, address);
+            triggerResult = runExecutor(triggerParam, address,nacosGroup);
         } else {
             triggerResult = new ReturnT<String>(ReturnT.FAIL_CODE, null);
         }
@@ -204,10 +216,16 @@ public class XxlJobTrigger {
      * @param address
      * @return
      */
-    public static ReturnT<String> runExecutor(TriggerParam triggerParam, String address){
+    public static ReturnT<String> runExecutor(TriggerParam triggerParam, String address, String nacosGroup){
         ReturnT<String> runResult = null;
+        GlueTypeEnum glueTypeEnum = GlueTypeEnum.match(triggerParam.getGlueType());
         try {
-            ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(address);
+            ExecutorBiz executorBiz;
+            if(glueTypeEnum == GlueTypeEnum.DUBBO){
+                executorBiz = XxlJobScheduler.getDubboEecutorBiz(address,nacosGroup);
+            }else{
+                executorBiz = XxlJobScheduler.getExecutorBiz(address);
+            }
             runResult = executorBiz.run(triggerParam);
         } catch (Exception e) {
             logger.error(">>>>>>>>>>> xxl-job trigger error, please check if the executor[{}] is running.", address, e);

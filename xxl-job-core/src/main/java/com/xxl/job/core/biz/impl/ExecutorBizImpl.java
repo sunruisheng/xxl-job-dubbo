@@ -7,6 +7,7 @@ import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.glue.GlueFactory;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.job.core.handler.IJobHandler;
+import com.xxl.job.core.handler.impl.DubboJobHandler;
 import com.xxl.job.core.handler.impl.GlueJobHandler;
 import com.xxl.job.core.handler.impl.ScriptJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
@@ -20,7 +21,18 @@ import java.util.Date;
  * Created by xuxueli on 17/3/1.
  */
 public class ExecutorBizImpl implements ExecutorBiz {
+
+    private String nacosAddress;
+    private String nacosGroup;
     private static Logger logger = LoggerFactory.getLogger(ExecutorBizImpl.class);
+
+    public ExecutorBizImpl(){
+    }
+
+    public ExecutorBizImpl(String nacosAddress, String nacosGroup) {
+        this.nacosAddress = nacosAddress;
+        this.nacosGroup = nacosGroup;
+    }
 
     @Override
     public ReturnT<String> beat() {
@@ -74,12 +86,16 @@ public class ExecutorBizImpl implements ExecutorBiz {
                 }
             }
 
-        } else if (GlueTypeEnum.GLUE_GROOVY == glueTypeEnum) {
+        } else if (GlueTypeEnum.DUBBO == glueTypeEnum) {
+
+            jobHandler = XxlJobExecutor.loadDubboJobHandler(nacosAddress,nacosGroup,triggerParam);
+
+        }else if (GlueTypeEnum.GLUE_GROOVY == glueTypeEnum) {
 
             // valid old jobThread
             if (jobThread != null &&
                     !(jobThread.getHandler() instanceof GlueJobHandler
-                        && ((GlueJobHandler) jobThread.getHandler()).getGlueUpdatetime()==triggerParam.getGlueUpdatetime() )) {
+                            && ((GlueJobHandler) jobThread.getHandler()).getGlueUpdatetime()==triggerParam.getGlueUpdatetime() )) {
                 // change handler or gluesource updated, need kill old thread
                 removeOldReason = "change job source or glue type, and terminate the old job thread.";
 

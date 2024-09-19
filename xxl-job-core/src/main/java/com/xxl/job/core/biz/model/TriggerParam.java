@@ -11,6 +11,9 @@ public class TriggerParam implements Serializable{
     private int jobId;
 
     private String executorHandler;
+    private String dubboMethod;
+    private String dubboGroup;
+    private String dubboVersion;
     private String executorParams;
     private String executorBlockStrategy;
     private int executorTimeout;
@@ -122,12 +125,38 @@ public class TriggerParam implements Serializable{
         this.broadcastTotal = broadcastTotal;
     }
 
+    public String getDubboMethod() {
+        return dubboMethod;
+    }
+
+    public void setDubboMethod(String dubboMethod) {
+        this.dubboMethod = dubboMethod;
+    }
+
+    public String getDubboVersion() {
+        return dubboVersion;
+    }
+
+    public void setDubboVersion(String dubboVersion) {
+        this.dubboVersion = dubboVersion;
+    }
+
+    public String getDubboGroup() {
+        return dubboGroup;
+    }
+
+    public void setDubboGroup(String dubboGroup) {
+        this.dubboGroup = dubboGroup;
+    }
 
     @Override
     public String toString() {
         return "TriggerParam{" +
                 "jobId=" + jobId +
                 ", executorHandler='" + executorHandler + '\'' +
+                ", dubboMethod='" + dubboMethod + '\'' +
+                ", dubboGroup='" + dubboGroup + '\'' +
+                ", dubboVersion='" + dubboVersion + '\'' +
                 ", executorParams='" + executorParams + '\'' +
                 ", executorBlockStrategy='" + executorBlockStrategy + '\'' +
                 ", executorTimeout=" + executorTimeout +
@@ -140,5 +169,4 @@ public class TriggerParam implements Serializable{
                 ", broadcastTotal=" + broadcastTotal +
                 '}';
     }
-
 }

@@ -2,8 +2,10 @@ package com.xxl.job.core.executor;
 
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.client.AdminBizClient;
+import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.XxlJob;
+import com.xxl.job.core.handler.impl.DubboJobHandler;
 import com.xxl.job.core.handler.impl.MethodJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.server.EmbedServer;
@@ -179,6 +181,19 @@ public class XxlJobExecutor  {
     public static IJobHandler loadJobHandler(String name){
         return jobHandlerRepository.get(name);
     }
+
+    public static IJobHandler loadDubboJobHandler(String nacosAddress,String nacosGroup, TriggerParam triggerParam){
+        String cacheKey = triggerParam.getExecutorHandler() + "." + triggerParam.getDubboMethod() + "." + triggerParam.getDubboGroup() + "." + triggerParam.getDubboVersion();
+        if(jobHandlerRepository.containsKey(cacheKey)){
+            return jobHandlerRepository.get(cacheKey);
+        }
+
+        IJobHandler jobHandler = new DubboJobHandler(nacosAddress,nacosGroup , triggerParam);
+
+        jobHandlerRepository.put(cacheKey, jobHandler);
+        return jobHandler;
+    }
+
     public static IJobHandler registJobHandler(String name, IJobHandler jobHandler){
         logger.info(">>>>>>>>>>> xxl-job register jobhandler success, name:{}, jobHandler:{}", name, jobHandler);
         return jobHandlerRepository.put(name, jobHandler);

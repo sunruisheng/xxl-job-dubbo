@@ -42,6 +42,10 @@ public class XxlJobInfo {
 	private long triggerLastTime;	// 上次调度时间
 	private long triggerNextTime;	// 下次调度时间
 
+	private String dubboMethod;		// dubbo服务调用方法名
+	private String dubboGroup;     //dubbo服务调用group
+	private String dubboVersion;	// dubbo服务版本号
+
 
 	public int getId() {
 		return id;
@@ -229,6 +233,30 @@ public class XxlJobInfo {
 
 	public long getTriggerNextTime() {
 		return triggerNextTime;
+	}
+
+	public String getDubboMethod() {
+		return dubboMethod;
+	}
+
+	public void setDubboMethod(String dubboMethod) {
+		this.dubboMethod = dubboMethod;
+	}
+
+	public String getDubboVersion() {
+		return dubboVersion;
+	}
+
+	public void setDubboVersion(String dubboVersion) {
+		this.dubboVersion = dubboVersion;
+	}
+
+	public String getDubboGroup() {
+		return dubboGroup;
+	}
+
+	public void setDubboGroup(String dubboGroup) {
+		this.dubboGroup = dubboGroup;
 	}
 
 	public void setTriggerNextTime(long triggerNextTime) {

@@ -178,9 +178,18 @@
                             </select>
                         </div>
                         <label for="firstname" class="col-sm-2 control-label">JobHandler<font color="red">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="executorHandler" placeholder="${I18n.system_please_input}JobHandler" maxlength="100" ></div>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="executorHandler" placeholder="${I18n.system_please_input}JobHandler(dubbo接口全类名)" maxlength="100" ></div>
                     </div>
-
+                    <div name="dubboDiv1" class="form-group">
+                    	<label for="firstname" class="col-sm-2 control-label">DubboMethod<font color="red">*</font></label>
+                    	<div class="col-sm-4"><input type="text" class="form-control" name="dubboMethod" placeholder="${I18n.system_please_input}dubbo方法名称" maxlength="100"></div>
+                    	<label for="firstname" class="col-sm-2 control-label">DubboGroup<font color="red">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="dubboGroup" placeholder="${I18n.system_please_input}dubbo接口分组" maxlength="100"></div>
+                    </div>
+                    <div name="dubboDiv2" class="form-group">
+                        <label for="firstname" class="col-sm-2 control-label">DubboVersion<font color="red">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="dubboVersion" placeholder="${I18n.system_please_input}dubbo接口版本号" maxlength="100"></div>
+                    </div>
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorparam}<font color="black">*</font></label>
                         <div class="col-sm-10">
@@ -424,6 +433,16 @@ exit 0
                         </div>
                         <label for="firstname" class="col-sm-2 control-label">JobHandler<font color="red">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="executorHandler" placeholder="${I18n.system_please_input}JobHandler" maxlength="100" ></div>
+                    </div>
+                    <div name="dubboDiv1" class="form-group">
+                        <label for="firstname" class="col-sm-2 control-label">DubboMethod<font color="red">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="dubboMethod" placeholder="${I18n.system_please_input}dubbo方法名称" maxlength="100"></div>
+                        <label for="firstname" class="col-sm-2 control-label">DubboGroup<font color="red">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="dubboGroup" placeholder="${I18n.system_please_input}dubbo接口分组" maxlength="100"></div>
+                    </div>
+                    <div name="dubboDiv2" class="form-group">
+                        <label for="firstname" class="col-sm-2 control-label">DubboVersion<font color="red">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="dubboVersion" placeholder="${I18n.system_please_input}dubbo接口版本号" maxlength="100"></div>
                     </div>
 
                     <div class="form-group">

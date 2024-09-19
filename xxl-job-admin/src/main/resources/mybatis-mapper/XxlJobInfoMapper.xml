@@ -31,6 +31,10 @@
 	    <result column="glue_remark" property="glueRemark" />
 		<result column="glue_updatetime" property="glueUpdatetime" />
 
+		<result column="executor_dubbo_method" property="dubboMethod" />
+		<result column="executor_dubbo_group" property="dubboGroup" />
+		<result column="executor_dubbo_version" property="dubboVersion" />
+
 		<result column="child_jobid" property="childJobId" />
 
 		<result column="trigger_status" property="triggerStatus" />
@@ -51,6 +55,9 @@
 		t.misfire_strategy,
 		t.executor_route_strategy,
 		t.executor_handler,
+		t.executor_dubbo_method,
+		t.executor_dubbo_group,
+		t.executor_dubbo_version,
 		t.executor_param,
 		t.executor_block_strategy,
 		t.executor_timeout,
@@ -124,6 +131,9 @@
 			misfire_strategy,
             executor_route_strategy,
 			executor_handler,
+			executor_dubbo_method,
+			executor_dubbo_group,
+			executor_dubbo_version,
 			executor_param,
 			executor_block_strategy,
 			executor_timeout,
@@ -148,6 +158,9 @@
 			#{misfireStrategy},
 			#{executorRouteStrategy},
 			#{executorHandler},
+			#{dubboMethod},
+			#{dubboGroup},
+			#{dubboVersion},
 			#{executorParam},
 			#{executorBlockStrategy},
 			#{executorTimeout},
@@ -186,6 +199,9 @@
 			misfire_strategy = #{misfireStrategy},
 			executor_route_strategy = #{executorRouteStrategy},
 			executor_handler = #{executorHandler},
+			executor_dubbo_method = #{dubboMethod},
+			executor_dubbo_group = #{dubboGroup},
+			executor_dubbo_version = #{dubboVersion},
 			executor_param = #{executorParam},
 			executor_block_strategy = #{executorBlockStrategy},
 			executor_timeout = ${executorTimeout},

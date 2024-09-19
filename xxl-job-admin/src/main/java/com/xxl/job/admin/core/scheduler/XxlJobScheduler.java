@@ -5,6 +5,7 @@ import com.xxl.job.admin.core.thread.*;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.client.ExecutorBizClient;
+import com.xxl.job.core.biz.impl.ExecutorBizImpl;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,7 +81,7 @@ public class XxlJobScheduler  {
     private static ConcurrentMap<String, ExecutorBiz> executorBizRepository = new ConcurrentHashMap<String, ExecutorBiz>();
     public static ExecutorBiz getExecutorBiz(String address) throws Exception {
         // valid
-        if (address==null || address.trim().length()==0) {
+        if (address==null || address.trim().isEmpty()) {
             return null;
         }
 
@@ -95,6 +96,24 @@ public class XxlJobScheduler  {
         executorBiz = new ExecutorBizClient(address, XxlJobAdminConfig.getAdminConfig().getAccessToken());
 
         executorBizRepository.put(address, executorBiz);
+        return executorBiz;
+    }
+
+    public static ExecutorBiz getDubboEecutorBiz(String address,String group) throws Exception {
+        // valid
+        if (address==null || address.trim().isEmpty()) {
+            return null;
+        }
+
+        // load-cache
+        address = address.trim();
+        String key = "nacos.address." + address;
+        ExecutorBiz executorBiz = executorBizRepository.get(key);
+        if (executorBiz != null) {
+            return executorBiz;
+        }
+        executorBiz = new ExecutorBizImpl(address,group);
+        executorBizRepository.put(key, executorBiz);
         return executorBiz;
     }
 
