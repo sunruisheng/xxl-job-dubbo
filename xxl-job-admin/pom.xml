@@ -79,12 +79,6 @@
 			<artifactId>dubbo-spring-boot-starter</artifactId>
 			<version>3.2.15</version>
 		</dependency>
-		<!-- dubbo naoms interface -->
-		<dependency>
-			<groupId>com.taocares</groupId>
-			<artifactId>naoms.service</artifactId>
-			<version>1.0.0.URC-SNAPSHOT</version>
-		</dependency>
 		<!-- nacos -->
 		<dependency>
 			<groupId>com.alibaba.nacos</groupId>

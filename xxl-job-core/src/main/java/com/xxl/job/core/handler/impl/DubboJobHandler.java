@@ -5,6 +5,7 @@ import java.util.Map;
 import com.alibaba.fastjson2.JSONObject;
 import com.xxl.job.core.context.XxlJobHelper;
 import org.apache.dubbo.config.ApplicationConfig;
+import org.apache.dubbo.config.ProtocolConfig;
 import org.apache.dubbo.config.ReferenceConfig;
 import org.apache.dubbo.config.RegistryConfig;
 import org.apache.dubbo.rpc.service.GenericService;
@@ -78,6 +79,12 @@ public class DubboJobHandler extends IJobHandler {
         registryConfig.setProtocol("nacos");
         registryConfig.setAddress(nacosAddress);
         registryConfig.setGroup(nacosGroup);
+
+        ProtocolConfig protocolConfig = new ProtocolConfig();
+        protocolConfig.setName("dubbo");
+        protocolConfig.setSerialization("hessian2");
+        protocolConfig.setPort(-1);
+        protocolConfig.setThreads(1000);
         //创建服务引用配置
 //        ReferenceConfig<GenericService> referenceConfig = new ReferenceConfig<>();
         //设置接口

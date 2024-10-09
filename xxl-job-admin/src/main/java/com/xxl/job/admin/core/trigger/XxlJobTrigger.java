@@ -1,5 +1,6 @@
 package com.xxl.job.admin.core.trigger;
 
+import com.xxl.job.admin.core.complete.XxlJobCompleter;
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
@@ -208,6 +209,15 @@ public class XxlJobTrigger {
         XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateTriggerInfo(jobLog);
 
         logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
+
+        //7.dubbo end trigger
+        if(GlueTypeEnum.DUBBO == glueTypeEnum){
+            jobLog.setHandleTime(new Date());
+            jobLog.setHandleCode(ReturnT.SUCCESS_CODE);
+            jobLog.setHandleMsg(I18nUtil.getString("joblog_handleCode_dubbo") );
+
+            XxlJobCompleter.updateHandleInfoAndFinish(jobLog);
+        }
     }
 
     /**
