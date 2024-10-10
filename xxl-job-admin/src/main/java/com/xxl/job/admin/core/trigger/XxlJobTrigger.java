@@ -205,7 +205,13 @@ public class XxlJobTrigger {
         jobLog.setExecutorFailRetryCount(finalFailRetryCount);
         //jobLog.setTriggerTime();
         jobLog.setTriggerCode(triggerResult.getCode());
-        jobLog.setTriggerMsg(triggerMsgSb.toString());
+        // text最大64kb 避免长度过长
+        if (triggerMsgSb.length() > 15000) {
+            jobLog.setTriggerMsg(triggerMsgSb.substring(0, 15000));
+        }else{
+            jobLog.setTriggerMsg(triggerMsgSb.toString());
+        }
+
         XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateTriggerInfo(jobLog);
 
         logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
